@@ -60,4 +60,3 @@ receita = data['total'].sum()
 
 ticket_m = receita / pedidos
 
-print(clientes_segmentacao)
