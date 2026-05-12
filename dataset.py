@@ -11,14 +11,19 @@ data = data.rename(columns={'InvoiceDate':'Data'})
 
 sep_data = data.columns.drop("Data")
 
+##REMOVENDO LINHAS SEM CLIENTES
+data = data.dropna(subset=["Customer ID"])
+
+##CONVERTENDO PARA STR
 data[sep_data] = data[sep_data].astype(str)
+data["Invoice"] = data["Invoice"].astype(str).str.strip()
+
 ##CONVERTENDO PARA NUMERICO
-colunas = ['Invoice','Quantity','Price',]
+colunas = ['Quantity','Price',]
 data[colunas] = data[colunas].apply(pd.to_numeric, errors='coerce')
 
 ##Data para data
 data["Data"] = pd.to_datetime(data["Data"])
-
 
 
 #KPIs
@@ -44,8 +49,9 @@ pedidos = data['Invoice'].nunique()
 
 tipo_mais_fre = clientes_segmentacao.iloc[0]["Categoria"]
 
-cancelados = (data['Quantity'] <=0).sum()
-total_pedidos = len(data)
+cancelados = (data[data["Invoice"].str.startswith("C")]["Invoice"].nunique())#pegando dpedidos q começão com C
+
+total_pedidos = data["Invoice"].nunique()
 
 porc_cancelamento = ( cancelados / total_pedidos) * 100
 
@@ -95,4 +101,6 @@ receita = data['total'].sum()
 ticket_m = receita / pedidos
 
 
-#print(top_pais)
+print("Cancelados",cancelados)
+print("total de pedidos",total_pedidos)
+print("Porcentage,",porc_cancelamento)
