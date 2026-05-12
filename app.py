@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 
 from dataset import receita, clientes, total_clientes, clientes_segmentacao, pedidos, ticket_m, porc_cancelamento, data, tipo_mais_fre
-
+from graficos import grafico_top_mes,grafico_fre_compra,grafico_top_produtos,grafico_top_pais
 
 ##CONFIGURANDO TELA
 st.set_page_config(layout='wide')
@@ -27,7 +27,17 @@ with aba1:
         st.metric("Ticket Médio", ticket_m)
     with col6:
         st.metric("Taxa de Cancelamento", porc_cancelamento)
+
+    col7, col8 = st.columns(2)
+    with col7:
+        st.plotly_chart(grafico_fre_compra,width='content')
+        st.plotly_chart(grafico_top_pais,width='content')
+
+    with col8:
+        st.plotly_chart(grafico_top_mes,width='content')
+        st.plotly_chart(grafico_top_produtos,width='content')
     
+
 #Aba2
 with aba2:
     st.dataframe(data)
